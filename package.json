@@ -1,0 +1,39 @@
+{
+  "name": "sinon-promise",
+  "version": "0.0.1",
+  "description": "Sinon with promises",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "q": "~1.0.1",
+    "sinon": "~1.9.1",
+    "mocha": "~1.18.2",
+    "sinon-chai": "~2.5.0",
+    "chai": "~1.9.1",
+    "gulp-mocha": "~0.4.1",
+    "gulp-jshint": "~1.5.5",
+    "gulp": "~3.6.2",
+    "jshint-stylish": "~0.2.0",
+    "gulp-plumber": "~0.6.1",
+    "gulp-util": "~2.2.14"
+  },
+  "scripts": {
+    "test": "gulp ci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/JohanObrink/sinon-promise.git"
+  },
+  "keywords": [
+    "sinon",
+    "promises",
+    "Q",
+    "test"
+  ],
+  "author": "Johan Öbrink <johan.obrink@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JohanObrink/sinon-promise/issues"
+  },
+  "homepage": "https://github.com/JohanObrink/sinon-promise"
+}
