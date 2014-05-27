@@ -1,5 +1,6 @@
 sinon-promise
 =============
+[![Build Status](https://travis-ci.org/JohanObrink/sinon-promise.svg?branch=master)](https://travis-ci.org/JohanObrink/sinon-promise)
 
 Sinon with promises
 
