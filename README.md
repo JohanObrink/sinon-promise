@@ -6,6 +6,11 @@ Sinon with promises
 
 *sinon-promise currently only supports Q and only works on the node platform*
 
+##Install it
+```shell
+npm install sinon-promise
+```
+
 ##Add it
 ```javascript
 var sinon = require('sinon'),
