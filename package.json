@@ -2,7 +2,7 @@
   "name": "sinon-promise",
   "version": "0.0.2",
   "description": "Sinon with promises",
-  "main": "sinonpromise.js",
+  "main": "lib/sinonpromise.js",
   "dependencies": {},
   "devDependencies": {
     "q": "~1.0.1",
