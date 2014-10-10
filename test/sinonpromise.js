@@ -2,19 +2,19 @@
 var chai = require('chai'),
   expect = chai.expect,
   sinon = require('sinon'),
-  sp = require('../');
+  sinonPromise = require('../'),
+  Q = sinonPromise.Q;
 
 chai.use(require('sinon-chai'));
 
 describe('sinon-promise', function () {
   var foo;
   beforeEach(function () {
-    sp(sinon);
+    sinonPromise(sinon);
     foo = { dostuff: sinon.promise() };
   });
   afterEach(function () {
     delete sinon.promise;
-    sp.restore();
   });
   it('adds a promise method to sinon', function () {
     expect(sinon.promise).to.be.a('function');
@@ -36,9 +36,52 @@ describe('sinon-promise', function () {
     expect(fail, 'fail').not.called;
 
     foo.dostuff.resolve('herp');
+
     expect(success, 'success').calledOnce;
     expect(success, 'success').calledWith('herp');
     expect(fail, 'fail').not.called;
+  });
+  it('resolves promises without auto flush', function () {
+    var success = sinon.spy();
+    var fail = sinon.spy();
+    foo.dostuff = sinon.promise(false);
+    foo.dostuff().then(success).catch(fail);
+
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').not.called;
+
+    foo.dostuff.resolve('herp');
+
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').not.called;
+
+    Q.flush();
+
+    expect(success, 'success').calledOnce;
+    expect(success, 'success').calledWith('herp');
+    expect(fail, 'fail').not.called;
+  });
+  it('eventually resolves promises without auto flush', function (done) {
+    var success = sinon.spy();
+    var fail = sinon.spy();
+    foo.dostuff = sinon.promise(false);
+    foo.dostuff().then(success).catch(fail);
+
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').not.called;
+
+    foo.dostuff.resolve('herp');
+
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').not.called;
+
+    setTimeout(function () {
+      expect(success, 'success').calledOnce;
+      expect(success, 'success').calledWith('herp');
+      expect(fail, 'fail').not.called;
+
+      done();
+    }, 10);
   });
   it('rejects promises', function () {
     var success = sinon.spy();
@@ -49,6 +92,26 @@ describe('sinon-promise', function () {
     expect(fail, 'fail').not.called;
 
     foo.dostuff.reject('herp');
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').calledOnce;
+    expect(fail, 'fail').calledWith('herp');
+  });
+  it('rejects promises without auto flush', function () {
+    var success = sinon.spy();
+    var fail = sinon.spy();
+    foo.dostuff = sinon.promise(false);
+    foo.dostuff().then(success).catch(fail);
+
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').not.called;
+
+    foo.dostuff.reject('herp');
+
+    expect(success, 'success').not.called;
+    expect(fail, 'fail').not.called;
+
+    Q.flush();
+
     expect(success, 'success').not.called;
     expect(fail, 'fail').calledOnce;
     expect(fail, 'fail').calledWith('herp');

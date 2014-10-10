@@ -2,22 +2,19 @@
   "node": true,
   "esnext": true,
   "bitwise": true,
-  "camelcase": true,
   "curly": true,
   "eqeqeq": true,
   "immed": true,
   "indent": 2,
-  "latedef": true,
   "newcap": true,
   "noarg": true,
-  "quotmark": "single",
   "regexp": true,
   "undef": true,
   "unused": true,
   "trailing": true,
   "smarttabs": true,
   "white": true,
-  "maxcomplexity": 6,
+  "newcap": false,
   "globals": {
     "describe": true,
     "xdescribe": true,
@@ -26,6 +23,13 @@
     "after": true,
     "afterEach": true,
     "it": true,
-    "xit": true
+    "xit": true,
+    "bootstrap": true,
+    "define": true,
+    "ses": true,
+    "Q": true,
+    "window": true,
+    "ReturnValue": true,
+    "MessageChannel": true
   }
 }

@@ -1,41 +1,49 @@
-var Q = require('q');
+var Q = require('./lib/q');
 
-function addMethods(obj, deferred) {
-  Object.keys(deferred)
-    .filter(function (key) {
-      return 'function' === typeof deferred[key];
-    })
-    .forEach(function (key) {
-      obj[key] = deferred[key];
-    });
+function addMethods(obj, deferred, autoFlush) {
+  obj.resolve = function () {
+    deferred.resolve.apply(obj, arguments);
+    if(autoFlush) { Q.flush(); }
+  };
+  obj.reject = function () {
+    deferred.reject.apply(obj, arguments);
+    if(autoFlush) { Q.flush(); }
+  };
+  obj.notify = function () {
+    deferred.notify.apply(obj, arguments);
+    if(autoFlush) { Q.flush(); }
+  };
 }
 
-function sinonq(sinon) {
-  sinon.stub(process, 'nextTick').yields();
+function sinonPromise(sinon) {
   
-  sinon.promise = function () {
-    var sinonPromise = sinon.spy(function () {
+  sinon.promise = function (autoFlush) {
+    if(autoFlush !== false) {
+      autoFlush = true;
+    }
+    
+    var promise = sinon.spy(function () {
 
-      sinonPromise._promises = sinonPromise._promises || [];
+      promise._promises = promise._promises || [];
 
       var deferred = Q.defer();
-      sinonPromise._promises.push(deferred);
+      promise._promises.push(deferred);
 
       // add methods to call instances
-      var _getCall = sinonPromise.getCall;
-      sinonPromise.getCall = function (i) {
-        var call = _getCall.call(sinonPromise, i);
+      var _getCall = promise.getCall;
+      promise.getCall = function (i) {
+        var call = _getCall.call(promise, i);
         if(call) {
-          addMethods(call, sinonPromise._promises[i]);
+          addMethods(call, promise._promises[i], autoFlush);
         }
         return call;
       };
 
       // add methods to promise
       Object.keys(deferred).forEach(function (key) {
-        sinonPromise[key] = function () {
-          for(var i=0; i<sinonPromise.callCount; i++) {
-            var call = sinonPromise.getCall(i);
+        promise[key] = function () {
+          for(var i=0; i<promise.callCount; i++) {
+            var call = promise.getCall(i);
             call[key].apply(call, arguments);
           }
         };
@@ -43,14 +51,10 @@ function sinonq(sinon) {
 
       return deferred.promise;
     });
-    return sinonPromise;
+    return promise;
   };
 }
 
-sinonq.restore = function () {
-  if(process && process.nextTick && 'function' === typeof process.nextTick.restore) {
-    process.nextTick.restore();
-  }
-};
+sinonPromise.Q = Q;
 
-module.exports = sinonq;
+module.exports = sinonPromise;
