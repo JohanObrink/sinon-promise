@@ -53,7 +53,7 @@ to use this version of promises (Why? See Asynchronous invocation!), you can use
 **Module**
 ```javascript
 var Q = require('q');
-// do stuff
+var deferred = Q.defer(); // you can pass the false flag here as well
 ```
 
 **Test**
