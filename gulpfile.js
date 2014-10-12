@@ -14,7 +14,7 @@ gulp.task('jshint', function () {
 gulp.task('mocha', function () {
   return gulp.src(['test/**/*.js'])
     .pipe(plumber())
-    .pipe(mocha({ reporter: 'Spec' }));
+    .pipe(mocha({ reporter: 'spec' }));
 });
 
 gulp.task('watch', function () {

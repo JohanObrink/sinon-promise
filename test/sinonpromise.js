@@ -156,4 +156,28 @@ describe('sinon-promise', function () {
     expect(listener2, 'listener2').calledOnce;
     expect(listener2, 'listener2').calledWith('derp');
   });
+  describe('#resolves', function () {
+    it('immediately resolves on call', function () {
+      var promise = sinon.promise().resolves('foo');
+      var success = sinon.spy();
+      var fail = sinon.spy();
+
+      promise().then(success).catch(fail);
+
+      expect(fail).not.called;
+      expect(success).calledOnce.calledWith('foo');
+    });
+  });
+  describe('#rejects', function () {
+    it('immediately rejects on call', function () {
+      var promise = sinon.promise().resolves('foo');
+      var success = sinon.spy();
+      var fail = sinon.spy();
+      
+      promise().then(success).catch(fail);
+
+      expect(fail).not.called;
+      expect(success).calledOnce.calledWith('foo');
+    });
+  });
 });

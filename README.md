@@ -37,7 +37,7 @@ sinon.assert.calledWith(success, { data: 'herp' });
 sinon.assert.notCalled(fail);
 ```
 
-##Asynchronous invocation
+##Immediate invocation
 A promise never resolves immediately. It always waits until the next event cycle.
 In order to make synchronous testing easy, a sinonPromise always returns immediately.
 If you don't want this behavior, pass in ```false``` to tell it not to flush:
@@ -46,9 +46,21 @@ If you don't want this behavior, pass in ```false``` to tell it not to flush:
 var promise = sinon.promise(false);
 ```
 
+###Automatic invocation
+If you want your promise to resolve or reject immediately when called, use ```resolves``` and ```rejects```
+```javascript
+var autoResolving = sinon.promise().resolves('foo');
+var autoRejecting = sinon.promise().rejects('bar');
+var spy = sinon.spy();
+autoResolving().then(spy);
+// spy is called with 'foo'
+autoRejecting().catch(spy);
+// spy is called with 'bar'
+```
+
 ##sinonPromise.Q
 The promise implementation in sinonPromise is a changed version of Q. To get your test modules
-to use this version of promises (Why? See Asynchronous invocation!), you can use ```proxyquire```
+to use this version of promises (Why? See Immediate invocation!), you can use ```proxyquire```
 
 **Module**
 ```javascript
