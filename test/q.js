@@ -15,7 +15,7 @@ describe('q', function () {
   });
 
   describe('defer', function () {
-    it.only('resolves immediately', function () {
+    it('resolves immediately', function () {
       var deferred = Q.defer();
       deferred.promise.then(success).catch(fail);
       deferred.resolve('foo');
@@ -27,6 +27,25 @@ describe('q', function () {
       var deferred = Q.defer();
       deferred.promise.then(success).catch(fail);
       deferred.reject('foo');
+      
+      expect(fail).calledOnce.calledWith('foo');
+      expect(success).not.called;
+    });
+  });
+
+  describe('nfcall', function () {
+    it('resolves immediately', function () {
+      var nodeCallback = sinon.stub();
+      Q.nfcall(nodeCallback).then(success).catch(fail);
+      nodeCallback.yield(null, 'foo');
+      
+      expect(fail).not.called;
+      expect(success).calledOnce.calledWith('foo');
+    });
+    it('rejects immediately', function () {
+      var nodeCallback = sinon.stub();
+      Q.nfcall(nodeCallback).then(success).catch(fail);
+      nodeCallback.yield('foo');
       
       expect(fail).calledOnce.calledWith('foo');
       expect(success).not.called;
